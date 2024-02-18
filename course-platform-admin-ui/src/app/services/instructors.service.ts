@@ -22,6 +22,12 @@ export class InstructorsService {
     return this.http.get<Array<Instructor>>(`${environment.backendHost}/instructors/all`);
   }
 
+  public deleteInstructor(instructorId:number){
+    return this.http.delete(`${environment.backendHost}/instructors/${instructorId}`);
+  }
 
+  public saveInstructor(instructor: Instructor) : Observable<Instructor>{
+    return this.http.post<Instructor>(`${environment.backendHost}/instructors`, instructor);
+  }
 
 }
