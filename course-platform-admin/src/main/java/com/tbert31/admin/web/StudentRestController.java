@@ -63,7 +63,7 @@ public class StudentRestController {
             @RequestParam(name = "page", defaultValue = "0") int page,
             @RequestParam(name = "size", defaultValue = "5") int size
     ){
-        return courseService.fetchCoursesForInstructor(studentId, page, size);
+        return courseService.fetchCoursesForStudent(studentId, page, size);
     }
 
     @GetMapping("/{studentId}/other-courses")

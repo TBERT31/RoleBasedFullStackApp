@@ -79,7 +79,7 @@ public class StudentServiceImpl implements StudentService {
         Iterator<Course> courseIterator = student.getCourses().iterator();
         if(courseIterator.hasNext()){
             Course course = courseIterator.next();
-            course.removeStudentToCourse(student);
+            course.removeStudentFromCourse(student);
         }
         studentDao.deleteById(studentId);
     }
