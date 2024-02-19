@@ -83,6 +83,11 @@
                             <td>{{c.courseDuration}}</td>
                             <td>{{c.courseDescription}}</td>
                             <td>{{c.instructor.firstName}} {{c.instructor.lastName}}</td>
+                            <td>
+                                <button type="button" (click)="enrollIn(c)" class="btn btn-primary-gradient">
+                                    Enroll In
+                                </button>
+                            </td>
                         </tr>
                     </tbody>
                     <tfoot>
@@ -96,10 +101,10 @@
                     </tfoot>
                 </table>
                 <ul class="nav nav-pills">
-                    <li *ngFor="let item of [].constructor(listOtherCourses.totalPages); let pageOtherCourses = index">
-                        <a [ngClass]="pageOtherCourses==otherCoursesCurrentPage?'btn-info':'btn-outline-info'" 
-                        (click)="gotoPageOtherCourses(pageOtherCourses)"
-                        class="btn mb-1 mt-1 ms-1">{{pageOtherCourses+1}}</a>
+                    <li *ngFor="let item of [].constructor(listOtherCourses.totalPages); let page = index">
+                        <a [ngClass]="page==otherCoursesCurrentPage?'btn-info':'btn-outline-info'" 
+                        (click)="gotoPageForOtherCourses(page)"
+                        class="btn mb-1 mt-1 ms-1">{{page+1}}</a>
                     </li>
                 </ul>
             </ng-container>

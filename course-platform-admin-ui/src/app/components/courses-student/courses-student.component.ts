@@ -56,8 +56,21 @@ export class CoursesStudentComponent implements OnInit {
     )
   }
 
-  gotoPageOtherCourses(pageOtherCourses:number){
-    this.otherCoursesCurrentPage = pageOtherCourses;
+  gotoPageForOtherCourses(page:number){
+    this.otherCoursesCurrentPage = page;
     this.handleSearchNonEnrolledInCourses();
   }
+
+  enrollIn(c: Course){
+    this.coursesService.enrollStudentInCourse(c.courseId, this.studentId).subscribe({
+      next: () => {
+        this.handleSearchStudentCourses();
+        this.handleSearchNonEnrolledInCourses();
+      }, error: err => {
+        alert(err.message);
+        console.log(err);
+      }
+    })
+  }
+  
 }

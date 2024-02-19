@@ -42,4 +42,8 @@ export class CoursesService {
   public getNonEnrolledInCoursesByStudent(studentId:number, currentPage: number, pageSize: number): Observable<PageResponse<Course>>{
     return this.http.get<PageResponse<Course>>(`${environment.backendHost}/students/${studentId}/other-courses?page=${currentPage}&size=${pageSize}`);
   }
+
+  public enrollStudentInCourse(courseId: number, studentId: number){
+    return this.http.post(`${environment.backendHost}/courses/${courseId}/enroll/students/${studentId}`, null);
+  }
 }
