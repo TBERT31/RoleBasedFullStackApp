@@ -5,6 +5,7 @@ import com.tbert31.admin.dao.UserDao;
 import com.tbert31.admin.entity.Role;
 import com.tbert31.admin.entity.User;
 import com.tbert31.admin.service.UserService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,11 +17,13 @@ public class UserServiceImpl implements UserService {
 
     private  RoleDao roleDao;
 
-    public UserServiceImpl(UserDao userDao, RoleDao roleDao) {
+    private PasswordEncoder passwordEncoder;
+
+    public UserServiceImpl(UserDao userDao, RoleDao roleDao, PasswordEncoder passwordEncoder) {
         this.userDao = userDao;
         this.roleDao = roleDao;
+        this.passwordEncoder = passwordEncoder;
     }
-
 
     @Override
     public User loadUserByEmail(String email) {
@@ -29,7 +32,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createUser(String email, String password) {
-        return userDao.save(new User(email, password));
+        String encodedPassword = passwordEncoder.encode(password);
+        return userDao.save(new User(email, encodedPassword));
     }
 
     @Override
