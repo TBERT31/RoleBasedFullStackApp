@@ -10,4 +10,6 @@ public class JWTUtil {
     public static final String ISSUER = "springBootApp";
 
     public static final String SECRET = "myPrivateSecret";
+
+    public static final String AUTH_HEADER = "Authorization";
 }
