@@ -19,33 +19,39 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import static com.tbert31.admin.constant.JWTUtil.*;
+import static com.tbert31.admin.constant.JWTUtil.AUTH_HEADER;
+import static com.tbert31.admin.constant.JWTUtil.SECRET;
 
 public class JWTAuthorizationFilter extends OncePerRequestFilter {
 
     private JWTHelper jwtHelper;
 
     public JWTAuthorizationFilter(JWTHelper jwtHelper) {
+        this.jwtHelper = jwtHelper;
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String accessToken = jwtHelper.extractTokenFromHeaderIfExists(request.getHeader(AUTH_HEADER));
-        if(accessToken != null){
-            Algorithm algorithm = Algorithm.HMAC256(SECRET);
-            JWTVerifier jwtVerifier = JWT.require(algorithm).build();
-            DecodedJWT decodedJWT = jwtVerifier.verify(accessToken);
-            String email = decodedJWT.getSubject();
-            String[] roles = decodedJWT.getClaim("roles").asArray(String.class);
-            Collection<GrantedAuthority> authorities = new ArrayList<>();
-            for(String role: roles){
-                authorities.add(new SimpleGrantedAuthority(role));
+        if (request.getServletPath().equals("/refresh-token")) {
+            filterChain.doFilter(request, response);
+        } else {
+            String accessToken = jwtHelper.extractTokenFromHeaderIfExists(request.getHeader(AUTH_HEADER));
+            if (accessToken != null) {
+                Algorithm algorithm = Algorithm.HMAC256(SECRET);
+                JWTVerifier jwtVerifier = JWT.require(algorithm).build();
+                DecodedJWT decodedJWT = jwtVerifier.verify(accessToken);
+                String email = decodedJWT.getSubject();
+                String[] roles = decodedJWT.getClaim("roles").asArray(String.class);
+                Collection<GrantedAuthority> authorities = new ArrayList<>();
+                for (String role : roles) {
+                    authorities.add(new SimpleGrantedAuthority(role));
+                }
+                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(email, null, authorities);
+                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                filterChain.doFilter(request, response);
+            } else {
+                filterChain.doFilter(request, response);
             }
-            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(email, null, authorities);
-            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-            filterChain.doFilter(request, response);
-        }else{
-            filterChain.doFilter(request, response);
         }
     }
 }

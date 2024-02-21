@@ -16,7 +16,7 @@ public class JWTHelper {
 
     Algorithm algorithm = Algorithm.HMAC256(SECRET);
 
-    public String generateAccessToken(String email, List<String> roles){
+    public String generateAccessToken(String email, List<String> roles) {
         return JWT.create()
                 .withSubject(email)
                 .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRE_ACCESS_TOKEN))
@@ -25,7 +25,7 @@ public class JWTHelper {
                 .sign(algorithm);
     }
 
-    public String generateRefreshToken(String email){
+    public String generateRefreshToken(String email) {
         return JWT.create()
                 .withSubject(email)
                 .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRE_REFRESH_TOKEN))
@@ -33,14 +33,14 @@ public class JWTHelper {
                 .sign(algorithm);
     }
 
-    public String extractTokenFromHeaderIfExists(String authorizationHeader){
-        if(authorizationHeader != null && authorizationHeader.startsWith(BEARER_PREFIX)){
+    public String extractTokenFromHeaderIfExists(String authorizationHeader) {
+        if (authorizationHeader != null && authorizationHeader.startsWith(BEARER_PREFIX)) {
             return authorizationHeader.substring(BEARER_PREFIX.length());
         }
         return null;
     }
 
-    public Map<String, String> getTokentsMap(String jwtAccessToken, String jwtRefreshToken){
+    public Map<String, String> getTokensMap(String jwtAccessToken, String jwtRefreshToken) {
         Map<String, String> idTokens = new HashMap<>();
         idTokens.put("accessToken", jwtAccessToken);
         idTokens.put("refreshToken", jwtRefreshToken);

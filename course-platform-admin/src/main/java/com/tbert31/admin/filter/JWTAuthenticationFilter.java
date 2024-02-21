@@ -39,10 +39,9 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         User user = (User) authResult.getPrincipal();
-        String jwtAccessToken = jwtHelper.generateAccessToken(user.getUsername(),
-                user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()));
+        String jwtAccessToken = jwtHelper.generateAccessToken(user.getUsername(), user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()));
         String jwtRefreshToken = jwtHelper.generateRefreshToken(user.getUsername());
         response.setContentType("application/json");
-        new ObjectMapper().writeValue(response.getOutputStream(), jwtHelper.getTokentsMap(jwtAccessToken, jwtRefreshToken));
+        new ObjectMapper().writeValue(response.getOutputStream(), jwtHelper.getTokensMap(jwtAccessToken, jwtRefreshToken));
     }
 }

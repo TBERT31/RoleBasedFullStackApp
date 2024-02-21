@@ -18,14 +18,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     private UserService userService;
 
-    public UserDetailsServiceImpl(UserService userService){
+    public UserDetailsServiceImpl(UserService userService) {
         this.userService = userService;
     }
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userService.loadUserByEmail(email);
-        if(user == null) throw new UsernameNotFoundException("User Not Found");
+        if (user == null) throw new UsernameNotFoundException("User Not Found");
         Collection<GrantedAuthority> authorities = new ArrayList<>();
         user.getRoles().forEach(role -> {
             SimpleGrantedAuthority authority = new SimpleGrantedAuthority(role.getName());

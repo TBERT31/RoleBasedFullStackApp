@@ -10,7 +10,7 @@ public interface InstructorService {
 
     Instructor loadInstructorById(Long instructorId);
 
-    Page<InstructorDTO> findInstructorByName(String name, int page, int size);
+    Page<InstructorDTO> findInstructorsByName(String name, int page, int size);
 
     InstructorDTO loadInstructorByEmail(String email);
 
