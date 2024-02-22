@@ -16,14 +16,26 @@ import { CoursesInstructorComponent } from './components/courses-instructor/cour
 import { CoursesStudentComponent } from './components/courses-student/courses-student.component';
 import { AuthenticationComponent } from './components/authentication/authentication.component';
 import { AuthInterceptorService } from './services/auth.interceptor.service';
+import { AuthGuardService } from './services/auth.guard.service';
+import { InstructorStudentGuardService } from './services/instructor-student.guard.service';
 
 const appRoutes: Routes = [
   { path: '', component: AuthenticationComponent },
-  { path: 'students', component: StudentsComponent },
-  { path: 'courses', component: CoursesComponent },
-  { path: 'teachers', component: TeachersComponent },
-  { path: 'instructor-courses/:id', component: CoursesInstructorComponent },
-  { path: 'student-courses/:id', component: CoursesStudentComponent },
+  { path: 'students', component: StudentsComponent, canActivate: [AuthGuardService], data: {role: 'Admin'}},
+  { path: 'courses', component: CoursesComponent, canActivate: [AuthGuardService], data: {role: 'Admin'}},
+  { path: 'teachers', component: TeachersComponent, canActivate: [AuthGuardService], data: {role: 'Admin'}},
+  { 
+    path: 'instructor-courses/:id', 
+    component: CoursesInstructorComponent, 
+    canActivate: [AuthGuardService, InstructorStudentGuardService], 
+    data: {role: 'Instructor'}
+  },
+  { 
+    path: 'student-courses/:id', 
+    component: CoursesStudentComponent, 
+    canActivate: [AuthGuardService, InstructorStudentGuardService], 
+    data: {role: 'Student'}
+  },
   { path: 'navbar', component: NavbarComponent },
   { path: 'header', component: HeaderComponent },
   { path: 'auth', component: AuthenticationComponent }

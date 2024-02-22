@@ -29,4 +29,8 @@ export class StudentsService {
   public loadStudentByEmail(email: string): Observable<Student>{
     return this.http.get<Student>(`${environment.backendHost}/students/find?email=${email}`);
   }
+
+  public updateStudent(student: Student, studentId: number): Observable<Student>{
+    return this.http.put<Student>(`${environment.backendHost}/students/${studentId}`, student);
+  }
 }

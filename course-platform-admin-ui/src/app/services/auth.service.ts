@@ -37,8 +37,10 @@ export class AuthService {
   saveToken(jwtTokens: LoginResponse) {
     const decodedAccessToken = this.jwtHelperService.decodeToken(jwtTokens.accessToken);
     const loggedUser = new LoggedUser(decodedAccessToken.sub, decodedAccessToken.roles, jwtTokens.accessToken, this.getExpirationDate(decodedAccessToken.exp), undefined, undefined);
-    this.user.next(loggedUser)
+    this.user.next(loggedUser);
+    this.autoLogout(this.getExpirationDate(decodedAccessToken.exp).valueOf() - new Date().valueOf());
     localStorage.setItem('userData', JSON.stringify(loggedUser));
+
     this.redirectLoggedInUser(decodedAccessToken, jwtTokens.accessToken)
   }
 
@@ -84,6 +86,40 @@ export class AuthService {
     if (loadedUser.token) {
       this.user.next(loadedUser);
       this.autoLogout(loadedUser._expiration.valueOf() - new Date().valueOf());
+    }
+  }
+
+  refreshInstructor(instructor: Instructor){
+    const userData : {
+      username:string,
+      roles:string[],
+      _token:string,
+      _expiration:Date,
+      student: Student | undefined,
+      instructor: Instructor | undefined,
+    } = JSON.parse(localStorage.getItem('userData')!);
+    if(!userData) return;
+    const loggedUser = new LoggedUser(userData.username, userData.roles, userData._token, 
+      new Date(userData._expiration), userData.student, instructor);
+    this.user.next(loggedUser);
+    localStorage.setItem('userData', JSON.stringify(loggedUser));
+  }
+
+  refreshStudent(student: Student){
+    const userData : {
+      username:string,
+      roles:string[],
+      _token:string,
+      _expiration:Date,
+      student: Student | undefined,
+      instructor: Instructor | undefined,
+    } = JSON.parse(localStorage.getItem('userData')!);
+    if(!userData) return;
+    const loggedUser = new LoggedUser(userData.username, userData.roles, userData._token, 
+      new Date(userData._expiration), student, userData.instructor);
+    if (loggedUser.token) {
+      this.user.next(loggedUser);
+      localStorage.setItem('userData', JSON.stringify(loggedUser));
     }
   }
 

@@ -7,7 +7,7 @@ import { AuthService } from './services/auth.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit{
-  title = 'javacornerng';
+  title = 'tbert31ng';
 
   constructor(
     private authService: AuthService
